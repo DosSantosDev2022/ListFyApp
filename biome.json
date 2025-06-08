@@ -1,0 +1,58 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"vcs": {
+		"enabled": false,
+		"clientKind": "git",
+		"useIgnoreFile": false
+	},
+	"files": {
+		"ignore": ["node_modules/", "dist/", ".expo/", "build/"]
+	},
+	"formatter": {
+		"enabled": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineWidth": 70
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"recommended": true,
+			"security": {
+				"noDangerouslySetInnerHtml": "warn"
+			},
+			"a11y": {
+				"noRedundantRoles": "warn",
+				"useAltText": "warn"
+			},
+			"correctness": {
+				"noUnusedVariables": "error",
+				"noUndeclaredVariables": "error",
+				"noUnreachable": "error",
+				"noEmptyPattern": "error"
+			},
+			"style": {
+				"noVar": "error",
+				"useSelfClosingElements": "error",
+				"useShorthandArrayType": "error",
+				"noUselessElse": "error",
+				"useBlockStatements": "info",
+				"useConsistentArrayType": "error"
+			},
+			"complexity": {
+				"noForEach": "warn",
+				"noUselessFragments": "warn"
+			}
+		}
+	},
+	"javascript": {
+		"formatter": {
+			"quoteStyle": "double",
+			"lineWidth": 70,
+			"indentWidth": 2
+		}
+	}
+}
