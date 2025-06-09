@@ -40,7 +40,8 @@
 				"useShorthandArrayType": "error",
 				"noUselessElse": "error",
 				"useBlockStatements": "info",
-				"useConsistentArrayType": "error"
+				"useConsistentArrayType": "error",
+				"useNumberNamespace": "off"
 			},
 			"complexity": {
 				"noForEach": "warn",
