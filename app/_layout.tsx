@@ -5,6 +5,7 @@ import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
+import CustomHeader from "@/components/layout/header";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -46,7 +47,14 @@ export default function RootLayout() {
 function RootLayoutNav() {
 	return (
 		<Stack>
-			<Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+			<Stack.Screen
+				name="(tabs)"
+				options={{
+					headerShown: true,
+					header: () => <CustomHeader />,
+					headerTitle: "",
+				}}
+			/>
 			<Stack.Screen
 				name="modal"
 				options={{ presentation: "modal" }}
