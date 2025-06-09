@@ -17,7 +17,7 @@ const ShoppingListItem = ({
 		<View className="bg-white p-4 mb-3 rounded-lg shadow-md flex-row justify-between items-center">
 			<Link
 				href={{
-					pathname: "/(tabs)/lists/[id]",
+					pathname: "/detailsLists/[id]",
 					params: { id: item.id },
 				}}
 				asChild

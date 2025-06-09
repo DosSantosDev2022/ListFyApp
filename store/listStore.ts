@@ -30,6 +30,19 @@ export const useListStore = create<ListState>((set,get) => ({
   },
 
   addItemToList: (listId, newItemData) => {
+   let calculatedTotal = 0
+   const itemAmount = newItemData.amount || 0
+   const itemUnitValue = newItemData.unitvalue || 0
+    
+   // Se a unidade for 'un', multiplica quantidade * valor unitário
+   // caso contrário, considera o valor unitário ja como o total para a quantidade
+   if( newItemData.unit === 'un') {
+    calculatedTotal = itemAmount * itemUnitValue
+   } else {
+     // Para kg, lt, pct, etc
+     calculatedTotal = itemUnitValue
+   }
+
     set((state) => ({
       lists: state.lists.map((list) =>
         list.id === listId
@@ -39,7 +52,7 @@ export const useListStore = create<ListState>((set,get) => ({
                 ...list.items,
                 {
                   id: uuidv4(),
-                  totalValueItem: (newItemData.amount || 1) * (newItemData.unitvalue || 0),
+                  totalValueItem: calculatedTotal,
                   ...newItemData,
                 },
               ],

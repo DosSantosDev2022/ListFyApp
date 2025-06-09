@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { View, Text, Alert } from "react-native";
 import { Input, Button } from "@/components/ui";
 import type { PurchaseItem } from "@/types";
+import UnitSelect from "@/components/unit-select";
 
 interface AddItemFormProps {
 	onAddItem: (
@@ -57,10 +58,10 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 				value={newItemAmount}
 				onChangeText={setNewItemAmount}
 			/>
-			<Input
-				placeholder="Unidade (ex: kg, un)"
+			<UnitSelect
 				value={newItemUnit}
-				onChangeText={setNewItemUnit}
+				onValueChange={setNewItemUnit}
+				placeholder="Selecione a Unidade"
 			/>
 			<Input
 				placeholder="Valor Unitário (Opcional, ex: 5.50)"

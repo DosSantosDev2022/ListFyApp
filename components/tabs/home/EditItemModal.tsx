@@ -7,8 +7,9 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 } from "react-native";
-import { Button } from "@/components/ui";
+import { Button, Input } from "@/components/ui";
 import type { PurchaseItem } from "@/types";
+import UnitSelect from "@/components/unit-select";
 
 interface EditItemModalProps {
 	isVisible: boolean;
@@ -80,31 +81,27 @@ const EditItemModal = ({
 				className="flex-1 justify-center items-center bg-black/50"
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 			>
-				<View className="bg-white p-6 rounded-lg w-11/12 shadow-xl">
+				<View className="bg-white p-6 rounded-lg w-11/12 shadow-xl flex-col gap-2">
 					<Text className="text-2xl font-bold mb-5 text-primary text-start">
 						Editar Item
 					</Text>
-					<TextInput
-						className="border border-gray-300 p-3 rounded-md mb-3 text-gray-800"
+					<Input
 						placeholder="Nome do Item"
 						value={editItemName}
 						onChangeText={setEditItemName}
 					/>
-					<TextInput
-						className="border border-gray-300 p-3 rounded-md mb-3 text-gray-800"
+					<Input
 						placeholder="Quantidade"
 						keyboardType="numeric"
 						value={editItemAmount}
 						onChangeText={setEditItemAmount}
 					/>
-					<TextInput
-						className="border border-gray-300 p-3 rounded-md mb-3 text-gray-800"
-						placeholder="Unidade"
+					<UnitSelect
 						value={editItemUnit}
-						onChangeText={setEditItemUnit}
+						onValueChange={setEditItemUnit}
+						placeholder="Selecione a Unidade"
 					/>
-					<TextInput
-						className="border border-gray-300 p-3 rounded-md mb-4 text-gray-800"
+					<Input
 						placeholder="Valor Unitário"
 						keyboardType="numeric"
 						value={editItemUnitValue}

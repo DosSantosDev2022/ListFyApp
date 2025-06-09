@@ -1,10 +1,9 @@
-import React from "react";
+import type React from "react";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { Link, Tabs } from "expo-router";
 import { Pressable } from "react-native";
 import { useClientOnlyValue } from "@/components/useClientOnlyValue";
 
-// You can explore the built-in icon families and icons on the web at https://icons.expo.fyi/
 function TabBarIcon(props: {
 	name: React.ComponentProps<typeof FontAwesome>["name"];
 	color: string;
@@ -60,7 +59,7 @@ export default function TabLayout() {
 				name="categories"
 				options={{
 					title: "Categorias",
-					tabBarIcon: ({ color, focused }) => (
+					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="code" color={color} />
 					),
 				}}
@@ -69,7 +68,7 @@ export default function TabLayout() {
 				name="reports"
 				options={{
 					title: "Preços",
-					tabBarIcon: ({ color, focused }) => (
+					tabBarIcon: ({ color }) => (
 						<TabBarIcon name="code" color={color} />
 					),
 				}}
