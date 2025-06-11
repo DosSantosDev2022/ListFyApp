@@ -14,7 +14,7 @@ const Input = forwardRef<
 		<TextInput
 			ref={ref}
 			className={cn(
-				"web:flex h-10 native:h-12 web:w-full rounded-md border border-input/20 bg-input/10 px-3 web:py-2 text-base lg:text-sm native:text-lg native:leading-[1.25] text-background placeholder:text-muted-foreground web:ring-offset-background file:border-0 file:bg-transparent file:font-medium web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-ring web:focus-visible:ring-offset-0",
+				"web:flex h-10 w-full native:h-12 web:w-full rounded-md border border-input/20 bg-input/10 px-3 web:py-2 text-base lg:text-sm native:text-lg native:leading-[1.25] text-muted-foreground placeholder:text-muted-foreground web:ring-offset-background file:border-0 file:bg-transparent file:font-medium web:focus-visible:outline-none web:focus-visible:ring-1 web:focus-visible:ring-ring web:focus-visible:ring-offset-0",
 				props.editable === false &&
 					"opacity-50 web:cursor-not-allowed",
 				className,

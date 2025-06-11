@@ -81,8 +81,8 @@ const EditItemModal = ({
 				className="flex-1 justify-center items-center bg-black/50"
 				behavior={Platform.OS === "ios" ? "padding" : "height"}
 			>
-				<View className="bg-white p-6 rounded-lg w-11/12 shadow-xl flex-col gap-2">
-					<Text className="text-2xl font-bold mb-5 text-primary text-start">
+				<View className="bg-secondary p-6 rounded-lg w-11/12 shadow-xl flex-col gap-2">
+					<Text className="text-2xl font-bold mb-5 text-foreground text-start">
 						Editar Item
 					</Text>
 					<Input
@@ -108,11 +108,13 @@ const EditItemModal = ({
 						onChangeText={setEditItemUnitValue}
 					/>
 					<View className="flex-row justify-end gap-2">
-						<Button variant={"secondary"} onPress={handleSave}>
-							<Text>Salvar</Text>
+						<Button variant={"default"} onPress={handleSave}>
+							<Text className="text-primary-foreground">Salvar</Text>
 						</Button>
 						<Button variant={"destructive"} onPress={onClose}>
-							<Text>Cancelar</Text>
+							<Text className="text-destructive-foreground">
+								Cancelar
+							</Text>
 						</Button>
 					</View>
 				</View>

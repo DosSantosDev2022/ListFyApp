@@ -6,6 +6,11 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import "../global.css";
 import CustomHeader from "@/components/layout/header";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
+import {
+	EXTRA_BOTTOM_SPACE,
+	TAB_BAR_HEIGHT,
+} from "@/components/tabs/CustomTabBar";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -20,7 +25,13 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+export let totalTabBarEffectiveHeight: number;
+
 export default function RootLayout() {
+	const insets = useSafeAreaInsets();
+
+	totalTabBarEffectiveHeight =
+		TAB_BAR_HEIGHT + insets.bottom + EXTRA_BOTTOM_SPACE;
 	const [loaded, error] = useFonts({
 		SpaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
 		...FontAwesome.font,
@@ -46,7 +57,8 @@ export default function RootLayout() {
 
 function RootLayoutNav() {
 	return (
-		<Stack>
+		<SafeAreaProvider>
+	<Stack>
 			<Stack.Screen
 				name="(tabs)"
 				options={{
@@ -60,5 +72,7 @@ function RootLayoutNav() {
 				options={{ presentation: "modal" }}
 			/>
 		</Stack>
+		</SafeAreaProvider>
+	
 	);
 }

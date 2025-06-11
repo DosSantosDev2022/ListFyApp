@@ -36,11 +36,14 @@ export default function UnitSelect({
 	return (
 		<View className={cn("relative", className)}>
 			<TouchableOpacity
-				className="flex-row items-center justify-between border border-gray-300 p-3 rounded-md mb-3 text-gray-800 bg-white"
+				className="flex-row items-center justify-between p-3 rounded-md  text-muted-foreground border border-input/20 bg-input/10"
 				onPress={() => setModalVisible(true)}
 			>
 				<Text
-					className={cn("text-gray-800", !value && "text-gray-500")}
+					className={cn(
+						"text-muted-foreground",
+						!value && "text-muted-foreground",
+					)}
 				>
 					{selectedLabel}
 				</Text>
@@ -57,8 +60,8 @@ export default function UnitSelect({
 					className="flex-1 justify-center items-center bg-black/50"
 					onPress={() => setModalVisible(false)} // Fecha modal ao tocar fora
 				>
-					<View className="bg-white p-4 rounded-lg w-11/12 max-h-[50%] shadow-xl">
-						<Text className="text-xl font-bold mb-4 text-gray-800">
+					<View className="bg-secondary p-4 rounded-lg w-11/12 max-h-[50%] shadow-xl">
+						<Text className="text-xl font-bold mb-4 text-foreground">
 							Selecione a Unidade
 						</Text>
 						<FlatList
@@ -66,23 +69,23 @@ export default function UnitSelect({
 							keyExtractor={(item) => item.value}
 							renderItem={({ item }) => (
 								<TouchableOpacity
-									className="py-3 px-2 border-b border-gray-200 last:border-b-0"
+									className="py-3 px-2 border-b border-border last:border-b-0"
 									onPress={() => {
 										onValueChange(item.value);
 										setModalVisible(false);
 									}}
 								>
-									<Text className="text-lg text-gray-700">
+									<Text className="text-lg text-muted-foreground">
 										{item.label}
 									</Text>
 								</TouchableOpacity>
 							)}
 						/>
 						<TouchableOpacity
-							className="mt-4 bg-gray-200 py-3 rounded-md items-center"
+							className="mt-4 bg-primary py-3 rounded-md items-center"
 							onPress={() => setModalVisible(false)}
 						>
-							<Text className="text-gray-700 font-semibold">
+							<Text className="text-foreground font-semibold">
 								Fechar
 							</Text>
 						</TouchableOpacity>

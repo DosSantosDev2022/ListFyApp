@@ -16,6 +16,7 @@ import {
 	EditItemModal,
 	PurchaseItemCard,
 } from "@/components/tabs";
+import { totalTabBarEffectiveHeight } from "../_layout";
 
 export default function ListDetailsScreen() {
 	const { id } = useLocalSearchParams();
@@ -75,8 +76,8 @@ export default function ListDetailsScreen() {
 
 	if (!list) {
 		return (
-			<View className="flex-1 justify-center items-center bg-gray-100">
-				<Text className="text-xl font-bold text-red-500">
+			<View className="flex-1 justify-center items-center bg-background">
+				<Text className="text-xl font-bold text-destructive">
 					Lista não encontrada!
 				</Text>
 			</View>
@@ -85,48 +86,62 @@ export default function ListDetailsScreen() {
 
 	return (
 		<KeyboardAvoidingView
-			className="flex-1"
+			className="flex-1 bg-background"
 			behavior={Platform.OS === "ios" ? "padding" : "height"}
 			keyboardVerticalOffset={Platform.OS === "ios" ? 60 : 0}
+			style={{ paddingBottom: totalTabBarEffectiveHeight }}
 		>
-			<ScrollView className="flex-1 p-4 bg-gray-100">
-				<Stack.Screen options={{ title: list.name }} />
-				<Text className="text-2xl font-bold mb-4 text-gray-800">
+			<View className="flex-1 p-4 ">
+				<Stack.Screen  options={{ title: '',  headerStyle: {
+            backgroundColor: 'hsl(226.2 30% 10%)', // Exemplo: um tom escuro de cinza
+          },
+          headerTintColor: '#FFFFFF',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },}} 
+				/>
+				<View className="border border-border p-2 rounded-lg mb-2">
+					<Text className="text-2xl font-bold text-foreground">
 					{list.name}
 				</Text>
-				<Text className="text-md text-muted mb-2">
+				<Text className="text-md text-muted-foreground mb-2">
 					Criada em:{" "}
 					{new Date(list.dateCreation).toLocaleDateString()}
 				</Text>
-				<Text className="text-md text-muted mb-4">
+				<Text className="text-md text-muted-foreground">
 					Valor Previsto: R${" "}
 					{list.TotalExpectedValue?.toFixed(2) || "0.00"}
 				</Text>
+				</View>
 
 				{/* Componente para adicionar novo item */}
 				<AddItemForm onAddItem={handleAddItem} />
 
-				<Text className="text-xl font-semibold mb-3 text-gray-800">
+				<Text className="text-xl font-semibold mb-3 text-foreground">
 					Itens da Lista:
 				</Text>
-				{list.items.length === 0 ? (
-					<Text className="text-gray-600">
-						Nenhum item nesta lista ainda.
-					</Text>
-				) : (
-					<FlatList
-						data={list.items}
-						keyExtractor={(item) => item.id}
-						renderItem={({ item }) => (
-							<PurchaseItemCard
-								item={item}
-								onEdit={openEditModal}
-								onRemove={handleRemoveItem}
+				<View className="flex-1">
+					<View className="flex-1 border border-border p-3 rounded-lg">
+						{list.items.length === 0 ? (
+							<Text className="text-muted-foreground">
+								Nenhum item nesta lista ainda.
+							</Text>
+						) : (
+							<FlatList
+								data={list.items}
+								keyExtractor={(item) => item.id}
+								renderItem={({ item }) => (
+									<PurchaseItemCard
+										item={item}
+										onEdit={openEditModal}
+										onRemove={handleRemoveItem}
+									/>
+								)}
 							/>
 						)}
-					/>
-				)}
-			</ScrollView>
+					</View>
+				</View>
+			</View>
 
 			{/* Componente Modal de Edição de Item */}
 			<EditItemModal

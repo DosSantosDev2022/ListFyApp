@@ -12,6 +12,7 @@ interface ListState {
   updateList: (listId: string, updateList: Partial<ShoppingList>) => void
   removeList:(listId: string) => void
   removeItemFromList: (listId: string, itemId: string) => void
+  renameList: (listId: string, newName: string) => void;
 }
 
 export const useListStore = create<ListState>((set,get) => ({
@@ -119,6 +120,10 @@ updateList: (listId, updatedListData) => {
     }));
     // Re-calcular o valor total da lista após remover um item
     get().updateListTotal(listId);
+  },
+
+   renameList: (listId: string, newName: string) => {
+    get().updateList(listId, { name: newName });
   },
 
   // Função auxiliar para recalcular o valor total de uma lista
