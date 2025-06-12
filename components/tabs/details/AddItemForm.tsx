@@ -1,10 +1,11 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { View, Text, Alert, Animated } from "react-native";
 import { Input, Button, Select } from "@/components/ui";
 import type { PurchaseItem } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { categories } from "@/enums/categories";
+import { categories as defaultCategories } from "@/enums/categories";
 import { units } from "@/enums/unit";
+import { useCategoryStore } from "@/store/categoryStore";
 
 interface AddItemFormProps {
 	onAddItem: (
@@ -20,6 +21,24 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 	const [newItemUnit, setNewItemUnit] = useState("");
 	const [selectedCategoryValue, setSelectedCategoryValue] = useState("");
 	const [newItemUnitValue, setNewItemUnitValue] = useState("");
+
+	const { categories: customCategories } = useCategoryStore();
+
+	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
+	const allAvailableCategories = useMemo(() => {
+		// Mapeie as categorias padrão para um formato consistente com suas categorias personalizadas
+		// para garantir que 'value' seja o 'id' e 'label' seja o 'name'.
+		const mappedDefaultCategories = defaultCategories.map(cat => ({
+			label: cat.label,
+			value: cat.value, // Usamos 'value' como o 'id' para categorias padrão no PurchaseItem
+			// Você pode adicionar outras propriedades da Category aqui se forem relevantes para o Select
+			// Por exemplo, { label: cat.label, value: cat.value, id: cat.value, name: cat.label, isPadrao: true }
+		}));
+		return [...mappedDefaultCategories, ...customCategories.map(cat => ({
+			label: cat.name,
+			value: cat.id, // Para categorias personalizadas, use o 'id' real
+		}))];
+	}, [defaultCategories, customCategories]);
 
 	useEffect(() => {
 		Animated.timing(rotateAnim, {
@@ -48,7 +67,7 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 		const unitValue =
 			parseFloat(newItemUnitValue.replace(",", ".")) || 0;
 
-		const selectedCategoryObject = categories.find(
+		const selectedCategoryObject = allAvailableCategories.find(
 			(cat) => cat.value === selectedCategoryValue
 		) || undefined;
 
@@ -110,7 +129,7 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 							title="Selecione a unidade"
 						/>
 						<Select
-							itens={categories}
+							itens={allAvailableCategories}
 							value={selectedCategoryValue}
 							onValueChange={setSelectedCategoryValue}
 							placeholder="Selecione a categoria"
