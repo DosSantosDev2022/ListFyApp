@@ -1,9 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { View, Text, Alert, Animated } from "react-native";
-import { Input, Button } from "@/components/ui";
+import { Input, Button, Select } from "@/components/ui";
 import type { PurchaseItem } from "@/types";
-import UnitSelect from "@/components/unit-select";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { categories } from "@/enums/categories";
+import { units } from "@/enums/unit";
 
 interface AddItemFormProps {
 	onAddItem: (
@@ -17,6 +18,7 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 	const [newItemName, setNewItemName] = useState("");
 	const [newItemAmount, setNewItemAmount] = useState("");
 	const [newItemUnit, setNewItemUnit] = useState("");
+	const [selectedCategoryValue, setSelectedCategoryValue] = useState("");
 	const [newItemUnitValue, setNewItemUnitValue] = useState("");
 
 	useEffect(() => {
@@ -46,11 +48,22 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 		const unitValue =
 			parseFloat(newItemUnitValue.replace(",", ".")) || 0;
 
+		const selectedCategoryObject = categories.find(
+			(cat) => cat.value === selectedCategoryValue
+		) || undefined;
+
 		const newItem: Omit<PurchaseItem, "id" | "totalValueItem"> = {
 			name: newItemName.trim(),
 			amount: amount,
 			unit: newItemUnit.trim() || undefined,
 			unitvalue: unitValue === 0 ? undefined : unitValue,
+			category: selectedCategoryObject ? { // Constrói o objeto Category para o newItem
+				id: selectedCategoryObject.value, // Usando o value como ID para as categorias padrão
+				name: selectedCategoryObject.label,
+				isPadrao: true, // Essas são categorias padrão
+				// Não temos icon nem color aqui, então não os inclua ou defina como undefined
+			} : undefined,
+			categoryId: selectedCategoryObject?.value, // Salva também o categoryId
 		};
 
 		onAddItem(newItem); // Chama a função passada via prop
@@ -60,6 +73,7 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 		setNewItemAmount("");
 		setNewItemUnit("");
 		setNewItemUnitValue("");
+		setSelectedCategoryValue("")
 	};
 
 	return (
@@ -88,10 +102,19 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 							value={newItemAmount}
 							onChangeText={setNewItemAmount}
 						/>
-						<UnitSelect
+						<Select
+							itens={units}
 							value={newItemUnit}
 							onValueChange={setNewItemUnit}
-							placeholder="Selecione a Unidade"
+							placeholder="Selecione a unidade"
+							title="Selecione a unidade"
+						/>
+						<Select
+							itens={categories}
+							value={selectedCategoryValue}
+							onValueChange={setSelectedCategoryValue}
+							placeholder="Selecione a categoria"
+							title="Selecione a categoria"
 						/>
 						<Input
 							placeholder="Valor Unitário (Opcional, ex: 5.50)"

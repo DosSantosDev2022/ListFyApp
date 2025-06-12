@@ -7,9 +7,10 @@ import {
 	KeyboardAvoidingView,
 	Platform,
 } from "react-native";
-import { Button, Input } from "@/components/ui";
+import { Button, Input, Select } from "@/components/ui";
 import type { PurchaseItem } from "@/types";
-import UnitSelect from "@/components/unit-select";
+import { units } from "@/enums/unit";
+import { categories } from "@/enums/categories";
 
 interface EditItemModalProps {
 	isVisible: boolean;
@@ -96,10 +97,19 @@ const EditItemModal = ({
 						value={editItemAmount}
 						onChangeText={setEditItemAmount}
 					/>
-					<UnitSelect
+					<Select
+						itens={units}
 						value={editItemUnit}
 						onValueChange={setEditItemUnit}
-						placeholder="Selecione a Unidade"
+						placeholder="Selecione a unidade"
+						title="Selecione a unidade"
+					/>
+					<Select
+						itens={categories}
+						value={editItemUnit}
+						onValueChange={setEditItemUnit}
+						placeholder="Selecione a categoria"
+						title="Selecione a categoria"
 					/>
 					<Input
 						placeholder="Valor Unitário"

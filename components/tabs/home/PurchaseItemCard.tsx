@@ -30,6 +30,9 @@ const PurchaseItemCard = ({
 						{item.totalValueItem?.toFixed(2)}
 					</Text>
 				)}
+				<Text className="font-medium text-muted-foreground">
+					{item.category?.name || 'Sem categoria'}
+				</Text>
 			</View>
 			<Button
 				size={"icon"}

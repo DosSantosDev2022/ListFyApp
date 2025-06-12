@@ -4,7 +4,6 @@ import {
 	Text,
 	FlatList,
 	Alert,
-	ScrollView,
 	Platform,
 	KeyboardAvoidingView,
 } from "react-native";
@@ -17,6 +16,7 @@ import {
 	PurchaseItemCard,
 } from "@/components/tabs";
 import { totalTabBarEffectiveHeight } from "../_layout";
+import { useToast } from "@/components/ui/toast";
 
 export default function ListDetailsScreen() {
 	const { id } = useLocalSearchParams();
@@ -33,6 +33,7 @@ export default function ListDetailsScreen() {
 		updateItemInList,
 		removeItemFromList,
 	} = useListStore();
+	const toast = useToast();
 
 	const list = lists.find((l) => l.id === listId);
 
@@ -41,15 +42,17 @@ export default function ListDetailsScreen() {
 		newItemData: Omit<PurchaseItem, "id" | "totalValueItem">,
 	) => {
 		if (!listId) {
-			Alert.alert("Erro", "ID da lista inválido.");
+			toast.showToast('ID da lista inválido. !', 'destructive')
 			return;
 		}
 		addItemToList(listId, newItemData);
+		toast.showToast('Item adicionado com sucesso !', 'success')
 	};
 	// função para revomer item da lista
 	const handleRemoveItem = (itemId: string) => {
 		if (listId) {
 			removeItemFromList(listId, itemId);
+			toast.showToast('Item removido com sucesso !', 'success')
 		}
 	};
 
@@ -71,6 +74,7 @@ export default function ListDetailsScreen() {
 	) => {
 		if (listId) {
 			updateItemInList(listId, itemId, updatedItemData);
+			toast.showToast('Item editado com sucesso !', 'success')
 		}
 	};
 
@@ -92,26 +96,28 @@ export default function ListDetailsScreen() {
 			style={{ paddingBottom: totalTabBarEffectiveHeight }}
 		>
 			<View className="flex-1 p-4 ">
-				<Stack.Screen  options={{ title: '',  headerStyle: {
-            backgroundColor: 'hsl(226.2 30% 10%)', // Exemplo: um tom escuro de cinza
-          },
-          headerTintColor: '#FFFFFF',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },}} 
+				<Stack.Screen options={{
+					title: '', headerStyle: {
+						backgroundColor: 'hsl(226.2 30% 10%)', // Exemplo: um tom escuro de cinza
+					},
+					headerTintColor: '#FFFFFF',
+					headerTitleStyle: {
+						fontWeight: 'bold',
+					},
+				}}
 				/>
 				<View className="border border-border p-2 rounded-lg mb-2">
 					<Text className="text-2xl font-bold text-foreground">
-					{list.name}
-				</Text>
-				<Text className="text-md text-muted-foreground mb-2">
-					Criada em:{" "}
-					{new Date(list.dateCreation).toLocaleDateString()}
-				</Text>
-				<Text className="text-md text-muted-foreground">
-					Valor Previsto: R${" "}
-					{list.TotalExpectedValue?.toFixed(2) || "0.00"}
-				</Text>
+						{list.name}
+					</Text>
+					<Text className="text-md text-muted-foreground mb-2">
+						Criada em:{" "}
+						{new Date(list.dateCreation).toLocaleDateString()}
+					</Text>
+					<Text className="text-md text-muted-foreground">
+						Valor Previsto: R${" "}
+						{list.TotalExpectedValue?.toFixed(2) || "0.00"}
+					</Text>
 				</View>
 
 				{/* Componente para adicionar novo item */}

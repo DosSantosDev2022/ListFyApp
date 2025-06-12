@@ -10,28 +10,33 @@ import { cn } from "@/lib/utils"; // Assumindo que você tem um utilitário para
 import { ChevronDown } from "lucide-react-native"; // Ícone para indicar dropdown
 
 interface UnitSelectProps {
+	itens: {
+		label: string
+		value: string
+	}[]
 	value: string;
 	onValueChange: (newValue: string) => void;
 	placeholder?: string;
 	className?: string;
+	title: string
 }
 
-const units = [
-	{ label: "Unidade (un)", value: "un" },
-	{ label: "Quilograma (kg)", value: "kg" },
-	{ label: "Grama (g)", value: "g" },
-];
 
-export default function UnitSelect({
+
+const Select = ({
+	itens,
 	value,
 	onValueChange,
-	placeholder = "Selecione a Unidade",
+	placeholder = "Selecione",
+	title = "Selecione",
 	className,
-}: UnitSelectProps) {
+}: UnitSelectProps) => {
 	const [modalVisible, setModalVisible] = useState(false);
 
 	const selectedLabel =
-		units.find((unit) => unit.value === value)?.label || placeholder;
+		value
+			? itens.find((item) => item.value === value)?.label || placeholder
+			: placeholder;
 
 	return (
 		<View className={cn("relative", className)}>
@@ -62,10 +67,10 @@ export default function UnitSelect({
 				>
 					<View className="bg-secondary p-4 rounded-lg w-11/12 max-h-[50%] shadow-xl">
 						<Text className="text-xl font-bold mb-4 text-foreground">
-							Selecione a Unidade
+							{title}
 						</Text>
 						<FlatList
-							data={units}
+							data={itens}
 							keyExtractor={(item) => item.value}
 							renderItem={({ item }) => (
 								<TouchableOpacity
@@ -95,3 +100,6 @@ export default function UnitSelect({
 		</View>
 	);
 }
+
+
+export { Select }
