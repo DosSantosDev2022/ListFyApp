@@ -1,5 +1,6 @@
 // src/components/CustomBottomSheetModal.tsx
-import React, { useEffect, useRef } from "react";
+import type React from "react";
+import { useEffect, useRef } from "react";
 import { View, Text, Modal, TouchableOpacity, Animated, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
@@ -23,6 +24,7 @@ const BottomSheetModal = ({
   const slideAnim = useRef(new Animated.Value(screenHeight)).current; // Inicia fora da tela
   const insets = useSafeAreaInsets(); // Obtém os insets da área segura (notches, etc.)
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (visible) {
       // Quando o modal se torna visível, anima para o topo da tela
@@ -50,7 +52,7 @@ const BottomSheetModal = ({
     >
       {/* Backdrop (fundo escuro) */}
       <TouchableOpacity
-        className="flex-1 bg-black/70 justify-end" // Estiliza o fundo escuro e alinha o conteúdo no final
+        className="flex-1 justify-end" // Estiliza o fundo escuro e alinha o conteúdo no final
         activeOpacity={1} // Desabilita o feedback visual no toque
         onPress={onClose} // Fecha o modal ao clicar no backdrop
       >
@@ -68,7 +70,7 @@ const BottomSheetModal = ({
         >
           {/* Handle visual (a barrinha de arrastar) */}
           <View className="items-center mb-4">
-            <View className="w-16 h-1.5 bg-gray-400 rounded-full"></View>
+            <View className="w-16 h-1.5 bg-gray-400 rounded-full" />
           </View>
 
           {/* Título do modal (se fornecido) */}
@@ -86,4 +88,4 @@ const BottomSheetModal = ({
   );
 };
 
-export {BottomSheetModal}
+export { BottomSheetModal }

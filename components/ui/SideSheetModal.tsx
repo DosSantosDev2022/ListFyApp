@@ -1,5 +1,6 @@
 // src/components/SideSheetModal.tsx
-import React, { useEffect, useRef } from "react";
+import type React from "react";
+import { useEffect, useRef } from "react";
 import { View, Text, Modal, TouchableOpacity, Animated, Dimensions } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { twMerge } from "tailwind-merge"; // Importe twMerge se você ainda não o fez
@@ -29,6 +30,7 @@ const SideSheetModal = ({
   const slideAnim = useRef(new Animated.Value(-screenWidth)).current;
   const insets = useSafeAreaInsets(); // Obtém os insets da área segura
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (visible) {
       // Quando o modal se torna visível, anima para a posição 0 (dentro da tela)

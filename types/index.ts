@@ -18,7 +18,7 @@ export type ShoppingList = {
   marketId?: string;       // Opcional: ID do supermercado vinculado
   TotalExpectedValue?: number; // Calculado: soma dos valorTotalItem dos itens
   items: PurchaseItem[];      // Array de itens na lista
-  status: 'pendente' | 'concluida' | 'cancelada'; // Status da lista
+  status: 'Todos' | 'Pendente' | 'Arquivado' | 'Concluída'; // Status da lista
 }
 
 export type Category = {

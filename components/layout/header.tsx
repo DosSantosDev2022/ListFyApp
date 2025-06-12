@@ -76,26 +76,34 @@ const CustomHeader: React.FC = () => {
 						<View className="border border-border rounded-lg p-2"> {/* Borda e padding para a seção */}
 							{/* Item de Link: Configurações */}
 							<Link href={'/home'} className="p-3 flex-row items-center gap-3 w-full rounded-md active:bg-secondary">
-								<FontAwesome name="gear" size={24} color={currentThemedColors.foreground} /> {/* Cor do ícone */}
-								<Text className="text-foreground text-xl">Configurações</Text>
+								<View className="flex-row items-center gap-3">
+									<FontAwesome name="gear" size={24} color={currentThemedColors.foreground} /> {/* Cor do ícone */}
+									<Text className="text-foreground text-xl">Configurações</Text>
+								</View>
 							</Link>
 
 							{/* Item de Link: Remover Propagandas */}
 							<Link href={'/home'} className="p-3 flex-row items-center gap-3 w-full rounded-md active:bg-secondary">
-								<FontAwesome name="dollar" size={24} color={currentThemedColors.foreground} /> {/* Exemplo de outro ícone */}
-								<Text className="text-foreground text-xl">Remover propagandas</Text>
+								<View className="flex-row items-center gap-3">
+									<FontAwesome name="dollar" size={24} color={currentThemedColors.foreground} /> {/* Exemplo de outro ícone */}
+									<Text className="text-foreground text-xl">Remover propagandas</Text>
+								</View>
 							</Link>
 
 							{/* Item de Link: Ajuda e Feedback */}
 							<Link href={'/home'} className="p-3 flex-row items-center gap-3 w-full rounded-md active:bg-secondary">
-								<FontAwesome name="question-circle" size={24} color={currentThemedColors.foreground} /> {/* Exemplo de outro ícone */}
-								<Text className="text-foreground text-xl">Ajuda e feedback</Text>
+								<View className="flex-row items-center gap-3">
+									<FontAwesome name="question-circle" size={24} color={currentThemedColors.foreground} /> {/* Exemplo de outro ícone */}
+									<Text className="text-foreground text-xl">Ajuda e feedback</Text>
+								</View>
 							</Link>
 
 							{/* Item de Link:Curtir aplicativo */}
 							<Link href={'/home'} className="p-3 flex-row items-center gap-3 w-full rounded-md active:bg-secondary">
-								<AntDesign name="like1" size={24} color={currentThemedColors.foreground} />
-								<Text className="text-foreground text-xl">Curtiu o aplicativo ?</Text>
+								<View className="flex-row items-center gap-3">
+									<AntDesign name="like1" size={24} color={currentThemedColors.foreground} />
+									<Text className="text-foreground text-xl">Curtiu o aplicativo ?</Text>
+								</View>
 							</Link>
 						</View>
 					</View>

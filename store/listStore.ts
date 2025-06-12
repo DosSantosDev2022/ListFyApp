@@ -13,6 +13,7 @@ interface ListState {
   removeList:(listId: string) => void
   removeItemFromList: (listId: string, itemId: string) => void
   renameList: (listId: string, newName: string) => void;
+  archieList: (listId: string) => void
 }
 
 export const useListStore = create<ListState>((set,get) => ({
@@ -24,7 +25,7 @@ export const useListStore = create<ListState>((set,get) => ({
       id: uuidv4(),
       dateCreation: new Date().toISOString(),
       items: [],
-      status: 'pendente',
+      status: 'Pendente',
       TotalExpectedValue: 0, // inicia com 0
     }
     set((state) => ({lists: [...state.lists, newList]}))
@@ -137,5 +138,15 @@ updateList: (listId, updatedListData) => {
         return list;
       }),
     }));
-  }
+  },
+
+  archieList: (listId: string) => {
+    set((state) => ({
+      lists: state.lists.map((list) =>
+        list.id === listId
+          ? { ...list, status: 'Arquivado' } // Altera o status para 'arquivado'
+          : list
+      ),
+    }));
+  },
 }))

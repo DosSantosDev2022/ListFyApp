@@ -11,6 +11,7 @@ import {
 	EXTRA_BOTTOM_SPACE,
 	TAB_BAR_HEIGHT,
 } from "@/components/tabs/CustomTabBar";
+import { ToastProvider } from "@/components/ui/toast";
 
 export {
 	// Catch any errors thrown by the Layout component.
@@ -58,21 +59,24 @@ export default function RootLayout() {
 function RootLayoutNav() {
 	return (
 		<SafeAreaProvider>
-	<Stack>
-			<Stack.Screen
-				name="(tabs)"
-				options={{
-					headerShown: true,
-					header: () => <CustomHeader />,
-					headerTitle: "",
-				}}
-			/>
-			<Stack.Screen
-				name="modal"
-				options={{ presentation: "modal" }}
-			/>
-		</Stack>
+			<ToastProvider>
+				<Stack>
+					<Stack.Screen
+						name="(tabs)"
+						options={{
+							headerShown: true,
+							header: () => <CustomHeader />,
+							headerTitle: "",
+						}}
+					/>
+					<Stack.Screen
+						name="modal"
+						options={{ presentation: "modal" }}
+					/>
+				</Stack>
+			</ToastProvider>
+
 		</SafeAreaProvider>
-	
+
 	);
 }
