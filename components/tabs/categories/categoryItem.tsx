@@ -1,6 +1,5 @@
 import { BottomSheetModal, Button, Input } from "@/components/ui";
 import { useToast } from "@/components/ui/toast";
-import { useCategoryStore } from "@/store/categoryStore";
 import type { Category } from "@/types";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useState } from "react";
@@ -15,15 +14,11 @@ interface CategoryItemProps {
 const CategoryItem = ({ category, onDelete, onEdit }: CategoryItemProps) => {
   const [isEditModalVisible, setIsEditModalVisible] = useState(false);
   const [editedCategoryName, setEditedCategoryName] = useState(""); // Novo estado para o nome editado
-  const [editedCategoryIcon, setEditedCategoryIcon] = useState(""); // Novo estado para o ícone editado
-  const [editedCategoryColor, setEditedCategoryColor] = useState(""); // Novo estado para a cor editada
 
   const toast = useToast();
 
   const handleEditPress = () => {
     setEditedCategoryName(category.name);
-    setEditedCategoryIcon(category.icon || "");
-    setEditedCategoryColor(category.color || "");
     setIsEditModalVisible(true);
   };
 
@@ -60,8 +55,6 @@ const CategoryItem = ({ category, onDelete, onEdit }: CategoryItemProps) => {
     const updatedCategory: Category = {
       ...category, // Mantém o ID e outras propriedades da categoria original
       name: editedCategoryName.trim(),
-      icon: editedCategoryIcon.trim() || undefined, // undefined se vazio
-      color: editedCategoryColor.trim() || undefined, // undefined se vazio
     };
 
     onEdit(updatedCategory); // Chama a função onEdit (que é updateCategory do store)
@@ -72,11 +65,7 @@ const CategoryItem = ({ category, onDelete, onEdit }: CategoryItemProps) => {
   return (
     <View className="flex-row items-center justify-between p-3 my-1 bg-secondary/50 rounded-lg border border-border">
       <View className="flex-row items-center">
-        {/* Você pode renderizar o ícone e a cor aqui se tiver essa informação no objeto Category */}
-        {category.icon && (
-          // biome-ignore lint/suspicious/noExplicitAny: <explanation>
-          <MaterialCommunityIcons name={category.icon as any} size={24} color={category.color || "white"} className="mr-3" />
-        )}
+
         <Text className="text-foreground text-lg font-medium">{category.name}</Text>
       </View>
       {/* Adicione botões de edição/deleção aqui se necessário */}
@@ -104,20 +93,6 @@ const CategoryItem = ({ category, onDelete, onEdit }: CategoryItemProps) => {
             value={editedCategoryName}
             onChangeText={setEditedCategoryName}
             className="mb-3"
-          />
-          {/* Implemente um seletor de ícones aqui, talvez com um FlatList de ícones do MaterialCommunityIcons */}
-          <Input
-            placeholder="Nome do Ícone (ex: food-apple)"
-            value={editedCategoryIcon}
-            onChangeText={setEditedCategoryIcon}
-            className="mb-3"
-          />
-          {/* Implemente um seletor de cores aqui, talvez com botões de cores */}
-          <Input
-            placeholder="Cor do Ícone (ex: #FF0000)"
-            value={editedCategoryColor}
-            onChangeText={setEditedCategoryColor}
-            className="mb-4"
           />
           <View className="flex-row gap-x-3 w-full">
             <Button className="flex-1" onPress={handleSaveEditedCategory}>

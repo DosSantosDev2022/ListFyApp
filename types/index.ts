@@ -2,8 +2,6 @@
 export type Category = {
   id: string;               // UUID para identificar a categoria
   name: string;             // Nome da categoria (ex: "Hortifruti", "Limpeza")
-  icon?: string;           // Opcional: nome do ícone
-  color?: string;             // Opcional: cor para a categoria
   isPadrao: boolean;        // Se é uma categoria padrão do app ou criada pelo usuário
 };
 

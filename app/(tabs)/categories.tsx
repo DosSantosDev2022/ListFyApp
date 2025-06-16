@@ -14,8 +14,6 @@ export default function CategoriesScreen() {
 	const { categories: customCategories, addCategory, deleteCategory, updateCategory } = useCategoryStore();
 	const [isModalVisible, setIsModalVisible] = useState(false);
 	const [newCategoryName, setNewCategoryName] = useState("");
-	const [newCategoryIcon, setNewCategoryIcon] = useState(""); // Estado para o ícone
-	const [newCategoryColor, setNewCategoryColor] = useState(""); // Estado para a cor (opcional)
 
 	// Combina categorias padrão e personalizadas
 	const allCategories = [
@@ -40,16 +38,12 @@ export default function CategoriesScreen() {
 		const newCategory: Category = {
 			id: `custom-${Date.now()}`, // Gerar um ID único
 			name: newCategoryName.trim(),
-			icon: newCategoryIcon || "format-list-bulleted", // Ícone padrão se não for fornecido
-			color: newCategoryColor || "#6b7280", // Cor padrão se não for fornecida
 			isPadrao: false, // É uma categoria personalizada
 		};
 
 		addCategory(newCategory);
 		toast.showToast('Categoria adicionada com sucesso !', 'success')
 		setNewCategoryName("");
-		setNewCategoryIcon("");
-		setNewCategoryColor("");
 		setIsModalVisible(false);
 	};
 
@@ -107,20 +101,6 @@ export default function CategoriesScreen() {
 						onChangeText={setNewCategoryName}
 						className="mb-3"
 					/>
-					{/* Implemente um seletor de ícones aqui, talvez com um FlatList de ícones do MaterialCommunityIcons */}
-					<Input
-						placeholder="Nome do Ícone (ex: food-apple)"
-						value={newCategoryIcon}
-						onChangeText={setNewCategoryIcon}
-						className="mb-3"
-					/>
-					{/* Implemente um seletor de cores aqui, talvez com botões de cores */}
-					<Input
-						placeholder="Cor do Ícone (ex: #FF0000)"
-						value={newCategoryColor}
-						onChangeText={setNewCategoryColor}
-						className="mb-4"
-					/>
 					<View className="flex-row gap-x-3 w-full">
 						<Button className="flex-1" onPress={handleAddCustomCategory}>
 							<Text className="text-primary-foreground font-bold">Salvar</Text>
@@ -131,8 +111,6 @@ export default function CategoriesScreen() {
 					</View>
 				</View>
 			</BottomSheetModal>
-
-
 		</View>
 	);
 }
