@@ -4,6 +4,7 @@
 		"slug": "ListFyApp",
 		"version": "1.0.0",
 		"orientation": "portrait",
+		"entryPoint": "expo-router/entry",
 		"icon": "./assets/images/icon.png",
 		"scheme": "listfyapp",
 		"userInterfaceStyle": "automatic",
@@ -22,7 +23,12 @@
 				"backgroundColor": "#ffffff"
 			},
 			"edgeToEdgeEnabled": true,
-			"package": "com.dossantosdev.ListFyApp"
+			"package": "com.dossantosdev.ListFyApp",
+			"config": {
+				"googleMaps": {
+					"apiKey": "process.env.EXPO_PUBLIC_Maps_API_KEY"
+				}
+			}
 		},
 		"web": {
 			"bundler": "metro",

@@ -1,3 +1,4 @@
+import type React from "react";
 
 export type Category = {
   id: string;               // UUID para identificar a categoria
@@ -25,6 +26,7 @@ export type ShoppingList = {
   dateCreation: string;      // Data de criação da lista (ISO string)
   ExpectedPurchaseDate?: string; // Opcional: Data prevista para a compra
   marketId?: string;       // Opcional: ID do supermercado vinculado
+  marketName?: string; // Opcional: Nome do supermercado vinculado
   TotalExpectedValue?: number; // Calculado: soma dos valorTotalItem dos itens
   items: PurchaseItem[];      // Array de itens na lista
   status: 'Todos' | 'Pendente' | 'Arquivado' | 'Concluída'; // Status da lista
@@ -40,3 +42,33 @@ export type Supermarket = {
   longitude?: number;       // Coordenadas para Google Maps
   googleMapsId?: string;    // ID do lugar no Google Maps (para integração futura)
 };
+
+export interface Prediction {
+  description: string;
+  place_id: string;
+  reference: string;
+  structured_formatting: {
+    main_text: string;
+    secondary_text: string;
+    main_text_matched_substrings?: Array<{ offset: number; length: number }>;
+    secondary_text_matched_substrings?: Array<{ offset: number; length: number }>;
+  };
+  terms: Array<{ offset: number; value: string }>;
+  types: string[];
+  matched_substrings?: Array<{ offset: number; length: number }>;
+}
+
+export interface Market {
+  id: string;
+  name: string;
+  address: string;
+  latitude: number;
+  longitude: number;
+}
+
+export interface MarketSearchModalContentProps {
+  Maps_API_KEY: string | undefined;
+  onMarketSelected: (market: Market) => void;
+  currentLocation: { latitude: number; longitude: number } | null;
+  setCurrentLocation: React.Dispatch<React.SetStateAction<{ latitude: number; longitude: number } | null>>;
+}

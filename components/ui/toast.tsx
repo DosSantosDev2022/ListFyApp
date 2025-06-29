@@ -38,7 +38,6 @@ const Toast: React.FC<ToastProps> = ({ id, message, variant = 'default', duratio
           icon: Info,
           iconColor: "white",
         };
-      case 'default':
       default:
         return {
           container: "bg-gray-800", // Ou bg-foreground ou outra cor padrão

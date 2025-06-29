@@ -8,47 +8,68 @@ import { totalTabBarEffectiveHeight } from "./_layout";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "@/components/ui/toast";
 import { twMerge } from "tailwind-merge";
+import { useMarketStore } from "@/store/favoriteMarkets";
+import type { Market } from "@/types";
 
 type FilterOption = 'Pendente' | 'Arquivado' | 'Concluída' | 'Todos';
 
 export default function HomeScreen() {
 	const { lists, addList, removeList, renameList, archieList } = useListStore();
-	const [isModalVisible, setIsModalVisible] = useState(false);
-	const [nameList, setNameList] = useState('')
+	const { favoriteMarkets } = useMarketStore(); // Acessar os mercados favoritos
+
+	const [isCreateListModalVisible, setIsCreateListModalVisible] = useState(false); // Renomeado para clareza
+	const [isSelectMarketModalVisible, setIsSelectMarketModalVisible] = useState(false); // Novo estado para o modal de seleção de mercado
+
+	const [nameList, setNameList] = useState('');
+	const [selectedMarket, setSelectedMarket] = useState<Market | null>(null); // Novo estado para o mercado selecionado
+
 	const [filterStatus, setFilterStatus] = useState<FilterOption>('Todos');
 	const toast = useToast();
 
-	const handleOpenModal = () => setIsModalVisible(true);
-	const handleCloseModal = () => {
-		setIsModalVisible(false);
-		// Limpar o input quando o modal fechar, seja por salvar ou cancelar
+	const handleOpenCreateListModal = () => setIsCreateListModalVisible(true);
+	const handleCloseCreateListModal = () => {
+		setIsCreateListModalVisible(false);
 		setNameList('');
+		setSelectedMarket(null); // Limpa o mercado selecionado ao fechar
 	};
+
+	const handleOpenSelectMarketModal = () => setIsSelectMarketModalVisible(true);
+	const handleCloseSelectMarketModal = () => setIsSelectMarketModalVisible(false);
 
 	// Função para adicionar uma nova lista
 	const handleAddList = () => {
 		if (nameList.trim() === '') {
-			toast.showToast('O nome é obrigatório !', 'destructive')
+			toast.showToast('O nome da lista é obrigatório!', 'destructive');
 			return;
 		}
-		addList({ name: nameList.trim() }); // Adiciona a lista ao store
-		toast.showToast('Lista adicionada com sucesso !', 'success')
-		handleCloseModal(); // Fecha o modal e limpa o input
+
+		addList({
+			name: nameList.trim(),
+			marketId: selectedMarket?.id,    // Passa o ID do mercado selecionado
+			marketName: selectedMarket?.name, // Passa o nome do mercado selecionado
+		});
+
+		toast.showToast('Lista adicionada com sucesso!', 'success');
+		handleCloseCreateListModal(); // Fecha o modal principal e limpa
+	};
+
+	// Lógica para selecionar um mercado no modal de seleção
+	const handleSelectMarket = (market: Market) => {
+		setSelectedMarket(market);
+		handleCloseSelectMarketModal(); // Fecha o modal de seleção de mercado
 	};
 
 	// Logica de filtragem e ordenação 
-
 	const filteredAndSortedList = useMemo(() => {
-		let currentLists = [...lists] // cria uma cópia para não modificar o array original
+		let currentLists = [...lists];
 
 		if (filterStatus !== 'Todos') {
-			currentLists = currentLists.filter(list => list.status === filterStatus)
+			currentLists = currentLists.filter(list => list.status === filterStatus);
 		}
 
-		currentLists.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime())
-		return currentLists
-	}, [lists, filterStatus])
-
+		currentLists.sort((a, b) => new Date(b.dateCreation).getTime() - new Date(a.dateCreation).getTime());
+		return currentLists;
+	}, [lists, filterStatus]);
 
 	// Componente para renderizar cada item da lista (FlatList)
 	const renderItem = ({ item }: { item: ShoppingList }) => (
@@ -66,7 +87,7 @@ export default function HomeScreen() {
 				<Button
 					variant={"default"}
 					size={"icon"}
-					onPress={handleOpenModal}
+					onPress={handleOpenCreateListModal} // Abre o modal principal
 				>
 					<MaterialCommunityIcons
 						name="plus"
@@ -131,43 +152,97 @@ export default function HomeScreen() {
 
 			</View>
 
-			{/* Modal adiciona lista */}
+			{/* Modal principal para ADICIONAR LISTA */}
 			<BottomSheetModal
-				visible={isModalVisible}
-				onClose={handleCloseModal} // Passa a função de fechamento
-				title="Adicionar lista" // Título específico para esta tela
-			// modalHeight={280} // Opcional: defina uma altura fixa se quiser
+				visible={isCreateListModalVisible}
+				onClose={handleCloseCreateListModal}
+				title="Adicionar nova lista"
 			>
-				{/* Conteúdo específico para este modal */}
-				<View className="p-4 w-full items-center">
-					{/* Campo de input para o novo nome */}
+				<View className="p-4 w-full">
+					{/* Campo de input para o nome da lista */}
 					<Input
 						placeholder="Nome da lista"
 						value={nameList}
 						onChangeText={setNameList}
-						autoFocus // Foca automaticamente no input ao abrir
+						autoFocus
+						className="mb-3"
 					/>
+
+					{/* Botão/Seletor de Mercado Favorito */}
+					<TouchableOpacity
+						className="flex-row items-center justify-between p-3 border border-border rounded-lg bg-input h-12 mb-4"
+						onPress={handleOpenSelectMarketModal} // Abre o modal de seleção de mercado
+					>
+						<Text className="text-muted-foreground text-base flex-1">
+							{selectedMarket ? selectedMarket.name : "Vincular a um Mercado (Opcional)"}
+						</Text>
+						<MaterialCommunityIcons
+							name="chevron-right"
+							size={24}
+							color="gray"
+						/>
+					</TouchableOpacity>
+
 
 					{/* Botões de Salvar e Cancelar */}
 					<View className="flex-row gap-x-3 mt-2">
 						<Button className="flex-1" onPress={handleAddList}>
-							<Text className="text-primary-foreground font-bold">Salvar</Text>
+							<Text className="text-primary-foreground font-bold">Salvar Lista</Text>
 						</Button>
-						<Button className="flex-1" variant="outline" onPress={handleCloseModal}>
+						<Button className="flex-1" variant="outline" onPress={handleCloseCreateListModal}>
 							<Text className="text-foreground">Cancelar</Text>
 						</Button>
 					</View>
 				</View>
 			</BottomSheetModal>
 
+			{/* Modal SECUNDÁRIO para SELECIONAR MERCADO FAVORITO */}
+			<BottomSheetModal
+				visible={isSelectMarketModalVisible}
+				onClose={handleCloseSelectMarketModal}
+				title="Escolha um Mercado Favorito"
+				modalHeight={400} // Altura ajustada para a lista de mercados
+			>
+				<View className="flex-1 p-4 w-full">
+					{favoriteMarkets.length === 0 ? (
+						<View className="flex-1 justify-center items-center">
+							<Text className="text-center text-muted-foreground">
+								Você ainda não tem mercados favoritos.{"\n"}Adicione-os na tela de Mercados!
+							</Text>
+						</View>
+					) : (
+						<FlatList
+							data={favoriteMarkets}
+							keyExtractor={(item) => item.id}
+							renderItem={({ item }) => (
+								<TouchableOpacity
+									className="flex-row items-center p-3 my-1 bg-secondary/50 rounded-lg border border-border"
+									onPress={() => handleSelectMarket(item)}
+								>
+									<MaterialCommunityIcons name="store-outline" size={20} color="white" className="mr-2" />
+									<View className="flex-1 pr-2">
+										<Text className="text-foreground text-lg font-medium">{item.name}</Text>
+										<Text className="text-muted-foreground text-sm" numberOfLines={1} ellipsizeMode="tail">{item.address}</Text>
+									</View>
+									{selectedMarket?.id === item.id && (
+										<MaterialCommunityIcons name="check-circle" size={24} color="green" />
+									)}
+								</TouchableOpacity>
+							)}
+							contentContainerStyle={{ paddingBottom: 20 }}
+						/>
+					)}
+				</View>
+			</BottomSheetModal>
+
 			{/* Renderiza as listas */}
 			<View className="flex-1">
 				{filteredAndSortedList.length === 0 ? (
-					<P className="text-center text-foreground mt-8">
+					<Text className="text-center text-foreground mt-8">
 						{filterStatus === 'Todos'
 							? 'Você ainda não tem listas de compras. Adicione uma!'
 							: `Não há listas "${filterStatus}" para exibir.`}
-					</P>
+					</Text>
 				) : (
 					<View className="bg-secondary/50 px-3 py-4 mb-4 mt-2 rounded-lg">
 						<FlatList

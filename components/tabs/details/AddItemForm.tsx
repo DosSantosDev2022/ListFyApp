@@ -27,16 +27,13 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 	// biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
 	const allAvailableCategories = useMemo(() => {
 		// Mapeie as categorias padrão para um formato consistente com suas categorias personalizadas
-		// para garantir que 'value' seja o 'id' e 'label' seja o 'name'.
 		const mappedDefaultCategories = defaultCategories.map(cat => ({
 			label: cat.label,
-			value: cat.value, // Usamos 'value' como o 'id' para categorias padrão no PurchaseItem
-			// Você pode adicionar outras propriedades da Category aqui se forem relevantes para o Select
-			// Por exemplo, { label: cat.label, value: cat.value, id: cat.value, name: cat.label, isPadrao: true }
+			value: cat.value,
 		}));
 		return [...mappedDefaultCategories, ...customCategories.map(cat => ({
 			label: cat.name,
-			value: cat.id, // Para categorias personalizadas, use o 'id' real
+			value: cat.id,
 		}))];
 	}, [defaultCategories, customCategories]);
 
@@ -80,7 +77,6 @@ const AddItemForm = ({ onAddItem }: AddItemFormProps) => {
 				id: selectedCategoryObject.value, // Usando o value como ID para as categorias padrão
 				name: selectedCategoryObject.label,
 				isPadrao: true, // Essas são categorias padrão
-				// Não temos icon nem color aqui, então não os inclua ou defina como undefined
 			} : undefined,
 			categoryId: selectedCategoryObject?.value, // Salva também o categoryId
 		};

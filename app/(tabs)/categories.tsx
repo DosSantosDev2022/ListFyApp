@@ -32,9 +32,6 @@ export default function CategoriesScreen() {
 			toast.showToast('O nome da categoria é obrigatório !', 'destructive')
 			return;
 		}
-
-		// Você precisará de uma forma de escolher ícones e cores
-		// Por enquanto, vamos usar valores placeholder
 		const newCategory: Category = {
 			id: `custom-${Date.now()}`, // Gerar um ID único
 			name: newCategoryName.trim(),

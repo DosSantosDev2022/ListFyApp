@@ -98,7 +98,7 @@ export default function ListDetailsScreen() {
 			<View className="flex-1 p-4 ">
 				<Stack.Screen options={{
 					title: '', headerStyle: {
-						backgroundColor: 'hsl(226.2 30% 10%)', // Exemplo: um tom escuro de cinza
+						backgroundColor: 'hsl(226.2 30% 10%)',
 					},
 					headerTintColor: '#FFFFFF',
 					headerTitleStyle: {
@@ -117,6 +117,12 @@ export default function ListDetailsScreen() {
 					<Text className="text-md text-muted-foreground">
 						Valor Previsto: R${" "}
 						{list.TotalExpectedValue?.toFixed(2) || "0.00"}
+					</Text>
+					<Text className="text-md text-muted-foreground">
+						Status: {list.status}
+					</Text>
+					<Text className="text-md text-muted-foreground">
+						Mercado: {list.marketName || "Não definido"}
 					</Text>
 				</View>
 

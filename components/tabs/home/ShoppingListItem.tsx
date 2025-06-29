@@ -1,4 +1,3 @@
-// src/components/ShoppingListItem.tsx
 import React, { useState } from "react";
 import { View, Text, TouchableOpacity } from "react-native";
 import { Link, useRouter } from "expo-router";
@@ -6,6 +5,8 @@ import { Button, BottomSheetModal, Input } from "@/components/ui";
 import type { ShoppingList } from "@/types";
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { useToast } from "@/components/ui/toast";
+// Importe o CenteredModal
+import { CenteredModal } from "@/components/ui/CenteredModal"; // Ajuste o caminho se necessário
 
 interface ShoppingListItemProps {
   item: ShoppingList;
@@ -21,13 +22,16 @@ const ShoppingListItem = ({
   archieList
 }: ShoppingListItemProps) => {
   const router = useRouter();
-  const [isModalVisible, setIsModalVisible] = useState(false); // Estado para controlar a visibilidade
-  const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false); // Estado para controlar a visibilidade do BottomSheetModal principal
+  const [isRenameModalVisible, setIsRenameModalVisible] = useState(false); // Estado para o modal de renomear
+  // NOVO ESTADO: Para o modal de confirmação de exclusão
+  const [isConfirmDeleteModalVisible, setIsConfirmDeleteModalVisible] = useState(false);
+
   const [newListName, setNewListName] = useState(item.name);
   const toast = useToast();
 
   const handleOpenModal = () => setIsModalVisible(true);
-  const handleCloseModal = () => setIsModalVisible(false); // Função para fechar o modal
+  const handleCloseModal = () => setIsModalVisible(false); // Função para fechar o modal principal
 
   const handleOpenRenameModal = () => {
     handleCloseModal(); // Fecha o modal principal antes de abrir o de renomear
@@ -41,29 +45,37 @@ const ShoppingListItem = ({
     router.push({ pathname: "/detailsLists/[id]", params: { id: item.id } });
   };
 
-  // função para deletar lista
-  const handleDeleteList = () => {
-    handleCloseModal(); // Fecha o modal
-    onRemove(item.id); // Chama a função onRemove
-    toast.showToast('Lista excluída com sucesso !', 'success')
+  // Funções para controlar o novo modal de confirmação
+  const handleOpenConfirmDeleteModal = () => {
+    handleCloseModal(); // Fecha o modal de opções antes de abrir o de confirmação
+    setIsConfirmDeleteModalVisible(true);
   };
+  const handleCloseConfirmDeleteModal = () => {
+    setIsConfirmDeleteModalVisible(false);
+  };
+
+  // Função para deletar a lista (agora chamada após confirmação)
+  const handleConfirmDeleteList = () => {
+    onRemove(item.id); // Chama a função onRemove (prop recebida)
+    toast.showToast('Lista excluída com sucesso!', 'success');
+    handleCloseConfirmDeleteModal(); // Fecha o modal de confirmação
+  };
+
   // função para renomear lista
   const handleSaveRename = () => {
     if (newListName.trim() !== "" && newListName !== item.name) {
       onRename(item.id, newListName.trim()); // Chama a prop onRename
-      toast.showToast('Lista editada com sucesso !', 'success')
+      toast.showToast('Lista editada com sucesso!', 'success');
     }
     handleCloseRenameModal(); // Fecha o modal de renomear
   };
 
   // função para arquivar lista
-
   const handleArchiveList = () => {
-    archieList(item.id)
-    toast.showToast('Lista arquivada com sucesso !', 'success')
+    archieList(item.id);
+    toast.showToast('Lista arquivada com sucesso!', 'success');
     handleCloseModal(); // Fecha o modal ao arquivar
   }
-
 
   return (
     <View className="p-4 mb-3 bg-secondary rounded-2xl border border-border flex-row justify-between items-start">
@@ -75,35 +87,44 @@ const ShoppingListItem = ({
           Criada em:{" "}
           {new Date(item.dateCreation).toLocaleDateString()}
         </Text>
-        <Text className="text-sm text-muted-foreground">
-          Total da compra: R${" "}
-          {item.TotalExpectedValue?.toFixed(2) || "0.00"}
-        </Text>
+        {item.TotalExpectedValue !== undefined && item.TotalExpectedValue !== null && (
+          <Text className="text-sm text-muted-foreground">
+            Total da compra: R${" "}
+            {item.TotalExpectedValue.toFixed(2) || "0.00"}
+          </Text>
+        )}
         <View className={'flex-row gap-2 text-sm capitalize'} >
           <Text className="text-muted-foreground">Status:</Text>
           <Text className={`font-bold ${item.status === 'Pendente' ? 'text-destructive ' : 'text-warning'} `}>
             {item.status}
           </Text>
         </View>
+        {item.marketName ? (
+          <Text className="text-sm text-muted-foreground">
+            Mercado: {item.marketName}
+          </Text>
+        ) : (
+          <Text className="text-sm text-muted-foreground italic">
+            Mercado: Não vinculado
+          </Text>
+        )}
       </View>
 
       <Button
         className="rounded-full"
         size={"icon"}
         variant={"link"}
-        onPress={handleOpenModal} // Abre o modal
+        onPress={handleOpenModal} // Abre o modal de opções
       >
         <Entypo color={'hsl(226.2 5% 55%)'} name="dots-three-vertical" size={24} />
       </Button>
 
-      {/* Modal com opções de ação */}
+      {/* BottomSheetModal com opções de ação */}
       <BottomSheetModal
         visible={isModalVisible}
-        onClose={handleCloseModal} // Passa a função de fechamento
-        title="Gerenciar lista" // Título específico para esta tela
-      // modalHeight={280} // Opcional: defina uma altura fixa se quiser
+        onClose={handleCloseModal}
+        title="Gerenciar lista"
       >
-        {/* Conteúdo específico para este modal */}
         <View className="gap-y-4 p-2 w-full">
           <Button variant={'outline'} className="flex-row items-center justify-start gap-3" onPress={handleOpenRenameModal}>
             <MaterialIcons name="mode-edit" size={24} color="white" />
@@ -117,7 +138,8 @@ const ShoppingListItem = ({
             <Entypo name="folder" size={24} color="white" />
             <Text className="text-destructive-foreground font-bold">Arquivar Lista</Text>
           </Button>
-          <Button variant={'outline'} className="flex-row items-center justify-start gap-3" onPress={handleDeleteList}>
+          {/* Agora este botão abre o CenteredModal de confirmação */}
+          <Button variant={'outline'} className="flex-row items-center justify-start gap-3" onPress={handleOpenConfirmDeleteModal}>
             <MaterialIcons name="delete" size={24} color="white" />
             <Text className="text-destructive-foreground font-bold">Excluir Lista</Text>
           </Button>
@@ -128,22 +150,19 @@ const ShoppingListItem = ({
         </View>
       </BottomSheetModal>
 
-      {/* Modal para renomar nome da lista */}
+      {/* BottomSheetModal para renomear nome da lista */}
       <BottomSheetModal
         visible={isRenameModalVisible}
         onClose={handleCloseRenameModal}
         title="Renomear Lista"
       >
         <View className="p-4 w-full items-center">
-          {/* Campo de input para o novo nome */}
           <Input
             placeholder="Novo nome da lista"
             value={newListName}
             onChangeText={setNewListName}
-            autoFocus // Foca automaticamente no input ao abrir
+            autoFocus
           />
-
-          {/* Botões de Salvar e Cancelar */}
           <View className="flex-row gap-x-3 mt-2">
             <Button className="flex-1" onPress={handleSaveRename}>
               <Text className="text-primary-foreground font-bold">Salvar</Text>
@@ -154,6 +173,36 @@ const ShoppingListItem = ({
           </View>
         </View>
       </BottomSheetModal>
+
+      {/* NOVO CenteredModal para Confirmação de Exclusão */}
+      <CenteredModal
+        visible={isConfirmDeleteModalVisible}
+        onClose={handleCloseConfirmDeleteModal}
+        title="Confirmar Exclusão"
+      >
+        <View className="p-4 items-center">
+          <Text className="text-foreground text-lg text-center mb-6">
+            Tem certeza que deseja remover a lista{" "}
+            <Text className="font-bold text-destructive">"{item.name}"</Text>?
+            Esta ação é irreversível.
+          </Text>
+          <View className="flex-row gap-x-3 w-full">
+            <Button
+              className="flex-1 bg-destructive"
+              onPress={handleConfirmDeleteList} // Chama a função de exclusão após confirmação
+            >
+              <Text className="text-primary-foreground font-bold">Remover</Text>
+            </Button>
+            <Button
+              className="flex-1"
+              variant="outline"
+              onPress={handleCloseConfirmDeleteModal}
+            >
+              <Text className="text-foreground">Cancelar</Text>
+            </Button>
+          </View>
+        </View>
+      </CenteredModal>
     </View>
   );
 };

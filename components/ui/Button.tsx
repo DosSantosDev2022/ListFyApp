@@ -5,7 +5,7 @@ import {
 } from "react";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Pressable } from "react-native";
-import { TextClassContext } from "./Text";
+import { TextClassContext } from "./Text"; // Seu componente Text personalizado
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -69,7 +69,7 @@ type ButtonProps = ComponentPropsWithoutRef<typeof Pressable> &
 	VariantProps<typeof buttonVariants>;
 
 const Button = forwardRef<ElementRef<typeof Pressable>, ButtonProps>(
-	({ className, variant, size, ...props }, ref) => {
+	({ className, variant, size, children, ...props }, ref) => { // <-- ADICIONADO 'children' AQUI
 		return (
 			<TextClassContext.Provider
 				value={buttonTextVariants({
@@ -84,9 +84,12 @@ const Button = forwardRef<ElementRef<typeof Pressable>, ButtonProps>(
 						buttonVariants({ variant, size, className }),
 					)}
 					ref={ref}
+					// biome-ignore lint/a11y/useSemanticElements: <explanation>
 					role="button"
 					{...props}
-				/>
+				>
+					{children}
+				</Pressable>
 			</TextClassContext.Provider>
 		);
 	},
